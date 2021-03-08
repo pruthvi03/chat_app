@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
             return callback('Profinity is not allowed');
         }
         // use io.emit to send it to all clients
-        io.emit('broadcastMsg', msg)
+        io.emit('message', msg)
         callback('Delivered');
     })
 
@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sendLocation',({lat,lng},callback)=>{
-        io.emit('message', `https://google.com/maps?q=${lat},${lng}`)
+        io.emit('locationMessage', `https://google.com/maps?q=${lat},${lng}`)
         callback();
     })
 });
