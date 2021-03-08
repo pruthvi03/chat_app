@@ -1,10 +1,7 @@
 const socket = io();
 
-socket.on('countUpdated',(count)=>{
-    console.log('the count is updated',count);
+// Goal :get welcome msg sended by server when client connects
+socket.on('message', (msg) => {
+    console.log('Printin msg sent by server: ', msg);
 })
 
-document.querySelector('#increment').addEventListener('click',()=>{
-    console.log('Click');
-    socket.emit('increment');
-});

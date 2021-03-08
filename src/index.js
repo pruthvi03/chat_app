@@ -10,23 +10,14 @@ app.use(express.urlencoded({ extended: true }));
 
 const server = http.createServer(app);
 const io = socketio(server)
-// app.get("/",(req,res)=>{
-//     res.render("index.html");
-// });
 
-let count = 0;
+
 io.on('connection', (socket) => {
     console.log('New websocket connection');
-    socket.emit('countUpdated',count);
-    socket.on('increment',()=>{
-        count++;
-        // If you use below socket.emit then 
-        // It emited to only client which had emmited increment event
-        // To notify all client use io.emit()
-        // socket.emit('countUpdated',count);
-        io.emit('countUpdated',count);
-    });
+    io.emit('message','Welcome');
 });
+
+// Goal: Send a welcome message to new users
 
 
 server.listen(3000, () => {
