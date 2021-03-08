@@ -11,12 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 const server = http.createServer(app);
 const io = socketio(server)
 
-// Goal allow  clients to send message
-// 1. create form with an input and button
-// 2. setup the event listener for form submissions
-//  -Emit 'sendMessage' with  i/p string as msg data
-// 2. have server listen for 'sendMessage'
-//  -send message to all clients
+// Goal: Share coordinates to other users
 
 // 'connection' event is bulit-in event
 io.on('connection', (socket) => {
@@ -35,6 +30,10 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect',()=>{
         io.emit('message','A user has left');
+    })
+
+    socket.on('sendLocation',({lat,lng})=>{
+        io.emit('message', `https://google.com/maps?q=${lat},${lng}`)
     })
 });
 
