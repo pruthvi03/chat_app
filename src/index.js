@@ -11,13 +11,23 @@ app.use(express.urlencoded({ extended: true }));
 const server = http.createServer(app);
 const io = socketio(server)
 
+// Goal allow  clients to send message
+// 1. create form with an input and button
+// 2. setup the event listener for form submissions
+//  -Emit 'sendMessage' with  i/p string as msg data
+// 2. have server listen for 'sendMessage'
+//  -send message to all clients
+
 
 io.on('connection', (socket) => {
     console.log('New websocket connection');
-    io.emit('message','Welcome');
+    socket.emit('message','Welcome');
+    socket.on('sendMessage',(msg) => {
+        console.log('msg recieved to server');
+        io.emit('broadcastMsg', msg)
+    })
 });
 
-// Goal: Send a welcome message to new users
 
 
 server.listen(3000, () => {
