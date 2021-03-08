@@ -3,6 +3,7 @@ const path = require('path');
 const http = require('http');
 const app = express();
 const socketio = require('socket.io');
+const Filter = require('bad-words');
 
 const publicDirectoryPath = path.join(__dirname, "../public");
 app.use(express.static(publicDirectoryPath));
@@ -22,18 +23,24 @@ io.on('connection', (socket) => {
     // socket.broadcast emits the event to all user except this socket
     socket.broadcast.emit('message','A new user has joined');
 
-    socket.on('sendMessage',(msg) => {
+    socket.on('sendMessage',(msg, callback) => {
         console.log('msg recieved to server');
+        const filter = new Filter();
+        if(filter.isProfane(msg)){
+            return callback('Profinity is not allowed');
+        }
         // use io.emit to send it to all clients
         io.emit('broadcastMsg', msg)
+        callback('Delivered');
     })
 
     socket.on('disconnect',()=>{
         io.emit('message','A user has left');
     })
 
-    socket.on('sendLocation',({lat,lng})=>{
+    socket.on('sendLocation',({lat,lng},callback)=>{
         io.emit('message', `https://google.com/maps?q=${lat},${lng}`)
+        callback();
     })
 });
 
