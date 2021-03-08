@@ -18,13 +18,23 @@ const io = socketio(server)
 // 2. have server listen for 'sendMessage'
 //  -send message to all clients
 
-
+// 'connection' event is bulit-in event
 io.on('connection', (socket) => {
     console.log('New websocket connection');
+
     socket.emit('message','Welcome');
+
+    // socket.broadcast emits the event to all user except this socket
+    socket.broadcast.emit('message','A new user has joined');
+
     socket.on('sendMessage',(msg) => {
         console.log('msg recieved to server');
+        // use io.emit to send it to all clients
         io.emit('broadcastMsg', msg)
+    })
+
+    socket.on('disconnect',()=>{
+        io.emit('message','A user has left');
     })
 });
 
